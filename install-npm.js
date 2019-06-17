@@ -6,7 +6,8 @@ var npmBin
   , node = process.argv[0]
   ;
 
-if (process.env['npm_execpath'] && process.env['npm_execpath'].match(/\/bin\/npm-cli\.js$/)) {
+const matched = `${path.sep}bin${path.sep}npm-cli\.js`
+if (process.env['npm_execpath'] && process.env['npm_execpath'].includes(matched)) {
   npmBin = path.resolve(process.env['npm_execpath']);
 }
 
@@ -26,7 +27,7 @@ if (npmBin) {
       packages: packages.map((pkg) => '"' + pkg + '"').join(' ')
     };
 
-    executioner('${node} ${npm} install --no-save --no-package-lock ${packages}', options, function(error, result) {
+    executioner('"${node}" "${npm}" install --no-save --no-package-lock ${packages}', options, function(error, result) {
       if (error) {
         console.error('Unable to install peerDependencies', error);
         process.exit(1);
